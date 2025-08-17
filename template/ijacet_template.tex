@@ -1,0 +1,94 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{fontenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\addbibresource{references.bib}
+
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+
+\begin{document}
+
+% Header block (IJACET-style)
+\begin{center}
+{\Large \textbf{{{ title }}} \par}
+\vspace{0.5em}
+
+% Authors with superscripts and corresponding mark
+{\normalsize
+{% for a in authors -%}
+{{ a.name }}\textsuperscript{ {{ a.affno }} }{% if a.corresponding %}{{ corresponding_mark }}{% endif %}{% if not loop.last %}, {% endif %}
+{%- endfor %}
+\par}
+
+% Affiliations block
+{\small
+{% for k, v in affiliations.items() -%}
+\textsuperscript{ {{ k }} } {{ v }} \par
+{%- endfor %}
+}
+
+% Emails line
+{\small
+{% for a in authors -%}
+{{ a.email }}{% if not loop.last %} \quad {% endif %}
+{%- endfor %}
+\par}
+
+\vspace{0.5em}
+DOI: \href{ {{ doi }} }{ {{ doi }} } \par
+\end{center}
+
+\hrule
+\vspace{0.25em}
+\textbf{Article Info}\par
+Article Submitted: {{ submitted }} \quad
+Article Accepted: {{ accepted }} \quad
+Article Published: {{ published }} \par
+
+This article is an open access article distributed under the terms and conditions of the Creative Commons Attribution (CC BY) license \href{ {{ license_url }} }{ {{ license_url }} } \par
+\hrule
+
+\vspace{0.75em}
+\textbf{Abstract}\par
+{{ abstract }}
+
+\textbf{Keywords:} {{ keywords }}
+
+\vspace{0.5em}
+{\small {{ journal_full }} \par
+{{ issue }} \par
+ISSN (Print): {{ issn_print }} \quad | \quad ISSN (Online): {{ issn_online }} \par
+\href{ {{ site_url }} }{ {{ site_url }} } \par
+}
+
+% Sections
+{% for s in sections %}
+\section*{ {{ s.num }}. {{ s.title }} }
+{{ s.text }}
+
+{% endfor %}
+
+% Optional figures
+{% if figure_files|length > 0 %}
+\section*{Figures}
+{% for fig in figure_files %}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{ {{ fig }} }
+\caption{Caption for {{ fig }}}
+\end{figure}
+{% endfor %}
+{% endif %}
+
+\printbibliography
+
+\end{document}
