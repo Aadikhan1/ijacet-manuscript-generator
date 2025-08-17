@@ -71,23 +71,29 @@ def compile_pdf(work_dir, tex_file):
     if not latex:
         return None, "LaTeX compiler not found. Install TeXLive/MiKTeX (xelatex/pdflatex)."
 
-    # run LaTeX -> Bib -> LaTeX x2
     basename = os.path.splitext(os.path.basename(tex_file))[0]
     try:
         # 1st pass
-        subprocess.run([latex, "-interaction=nonstopmode", basename + ".tex"], cwd=work_dir, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.run([latex, "-interaction=nonstopmode", basename + ".tex"],
+                       cwd=work_dir, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # bibliography
         if bib:
             if bib.endswith("biber"):
-                subprocess.run(["biber", basename], cwd=work_dir, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                subprocess.run(["biber", basename], cwd=work_dir, check=True,
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             else:
-                subprocess.run(["bibtex", basename], cwd=work_dir, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                subprocess.run(["bibtex", basename], cwd=work_dir, check=True,
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # 2nd + 3rd pass
-        subprocess.run([latex, "-interaction=nonstopmode", basename + ".tex"], cwd=work_dir, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        subprocess.run([latex, "-interaction=nonstopmode", basename + ".tex"], cwd=work_dir, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.run([latex, "-interaction=nonstopmode", basename + ".tex"],
+                       cwd=work_dir, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.run([latex, "-interaction=nonstopmode", basename + ".tex"],
+                       cwd=work_dir, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
         pdf_path = os.path.join(work_dir, basename + ".pdf")
         if os.path.exists(pdf_path):
             return pdf_path, None
         return None, "Compilation finished but PDF not found."
     except subprocess.CalledProcessError as e:
-        return None, f\"LaTeX error: {e}\"\
+        return None, f"LaTeX error: {e}"
+
